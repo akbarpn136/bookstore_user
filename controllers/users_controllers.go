@@ -18,6 +18,8 @@ func CreateUser(c *gin.Context) {
 			Code:    http.StatusBadRequest,
 			Error:   "bad_request",
 		})
+
+		return
 	}
 
 	user := users.User{
@@ -30,12 +32,14 @@ func CreateUser(c *gin.Context) {
 
 	result, Err := services.CreateUser(user)
 
-	if Err != nil {
+	if len(Err) > 0 {
 		c.JSON(http.StatusBadRequest, errors.RestErrors{
-			Message: Err.Error(),
+			Message: Err,
 			Code:    http.StatusBadRequest,
 			Error:   "bad_request",
 		})
+
+		return
 	}
 
 	c.JSON(http.StatusCreated, result)
