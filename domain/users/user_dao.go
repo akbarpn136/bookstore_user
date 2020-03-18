@@ -2,7 +2,6 @@ package users
 
 import (
 	"bookstore/utils/errors"
-	"net/http"
 )
 
 var (
@@ -13,11 +12,7 @@ func (user *User) Get() *errors.RestErrors {
 	result := usersDB[user.Id]
 
 	if result == nil {
-		return &errors.RestErrors{
-			Message: []string{"User not found"},
-			Code:    http.StatusNotFound,
-			Error:   "not_found",
-		}
+		return errors.NotFound([]string{"User not found"})
 	}
 
 	user.Id = result.Id
@@ -33,11 +28,7 @@ func (user *User) Save() *errors.RestErrors {
 	currentUser := usersDB[user.Id]
 
 	if currentUser != nil {
-		return &errors.RestErrors{
-			Message: []string{"User already exist"},
-			Code:    http.StatusNotAcceptable,
-			Error:   "not_acceptable",
-		}
+		return errors.NotAcceptable([]string{"User already exist"})
 	}
 
 	usersDB[user.Id] = user
