@@ -3,16 +3,11 @@ package services
 import (
 	"bookstore/domain/users"
 	"bookstore/utils/errors"
-	"net/http"
 )
 
 func CreateUser(user users.User) (*users.User, *errors.RestErrors) {
 	if err := user.Validate(); len(err) > 0 {
-		return nil, &errors.RestErrors{
-			Message: err,
-			Code:    http.StatusBadRequest,
-			Error:   "bad_request",
-		}
+		return nil, errors.BadRequest(err)
 	}
 
 	if err := user.Save(); err != nil {
