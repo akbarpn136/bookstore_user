@@ -13,11 +13,7 @@ func CreateUser(c *gin.Context) {
 	val := c.Request.Form
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errors.RestErrors{
-			Message: []string{err.Error()},
-			Code:    http.StatusBadRequest,
-			Error:   "bad_request",
-		})
+		c.JSON(http.StatusBadRequest, errors.BadRequest([]string{err.Error()}))
 
 		return
 	}
