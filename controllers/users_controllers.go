@@ -14,7 +14,7 @@ func CreateUser(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errors.RestErrors{
-			Message: err.Error(),
+			Message: []string{err.Error()},
 			Code:    http.StatusBadRequest,
 			Error:   "bad_request",
 		})
@@ -23,7 +23,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	user := users.User{
-		Id:          1,
+		Id:          val.Get("id"),
 		FirstName:   val.Get("first_name"),
 		LastName:    val.Get("last_name"),
 		Email:       val.Get("email"),
@@ -32,12 +32,8 @@ func CreateUser(c *gin.Context) {
 
 	result, Err := services.CreateUser(user)
 
-	if len(Err) > 0 {
-		c.JSON(http.StatusBadRequest, errors.RestErrors{
-			Message: Err,
-			Code:    http.StatusBadRequest,
-			Error:   "bad_request",
-		})
+	if Err != nil {
+		c.JSON(http.StatusBadRequest, Err)
 
 		return
 	}
@@ -47,5 +43,12 @@ func CreateUser(c *gin.Context) {
 
 func GetUser(c *gin.Context) {
 	userId, _ := c.Params.Get("user_id")
-	c.String(http.StatusOK, "Get user with id: "+userId)
+	result, getErr := services.GetUser(userId)
+
+	if getErr != nil {
+		c.JSON(http.StatusNotFound, getErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
 }
