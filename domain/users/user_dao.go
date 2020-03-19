@@ -1,6 +1,7 @@
 package users
 
 import (
+	"bookstore/datasources/mysql/users_db"
 	"bookstore/utils/date_utils"
 	"bookstore/utils/errors"
 )
@@ -14,6 +15,10 @@ func (user *User) Get() *errors.RestErrors {
 
 	if result == nil {
 		return errors.NotFound([]string{"User not found"})
+	}
+
+	if err := users_db.Db.Ping(); err != nil {
+		panic(err)
 	}
 
 	user.Id = result.Id
