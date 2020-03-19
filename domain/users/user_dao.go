@@ -1,6 +1,7 @@
 package users
 
 import (
+	"bookstore/utils/date_utils"
 	"bookstore/utils/errors"
 )
 
@@ -31,6 +32,7 @@ func (user *User) Save() *errors.RestErrors {
 		return errors.NotAcceptable([]string{"User already exist"})
 	}
 
+	user.DateCreated = date_utils.GetNowString()
 	usersDB[user.Id] = user
 
 	return nil
